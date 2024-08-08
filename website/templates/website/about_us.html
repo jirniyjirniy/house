@@ -1,0 +1,95 @@
+{% extends 'website/base.html' %}
+{%  load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+
+{% block title %}
+    О нас
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
+{% endblock %}
+{% block content %}
+        <div class="container" style="margin-top: 80px;">
+            <div class="row mb-4">
+                <div class="col-12 text-center text-md-start">
+                    <h3 class="mb-4 border-bottom pb-3 text-start">{{ about_us.title }}</h3>
+                    <img src="{{about_us.director_photo.url}}"    class="mb-1  float-md-end ms-md-3 mb-md-3" style="width: 250px; height: 150px; object-fit: cover" alt="">
+                    <p class="text-start">
+                        {{ about_us.description|safe|escape }}
+                    </p>
+                </div>
+            </div>
+
+        <div class="row">
+            {% for photo in photos %}
+                <div class="col-12 col-md-6 col-lg-3 mb-3 item">
+                    <a href="{{ photo.img.url }}" data-fancybox="gallery" data-caption="Картинка 1">
+                      <img class="img-thumbnail img-fluid" style="object-fit: cover" src="{{ photo.img.url }}" />
+                    </a>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="container" style="margin-top: 80px;">
+        <div class="row mb-4">
+            <div class="col-12 text-center text-md-start">
+                <h3 class="mb-4 border-bottom pb-3 text-start">{{ about_us.extra_title }}</h3>
+                <p class="text-start">
+                    {{ about_us.extra_description|safe|escape }}
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for photo in extra_photos %}
+                <div class="col-12 col-md-6 col-lg-3 mb-3 item">
+                    <a href="{{ photo.img.url }}" data-fancybox="gallery2" data-caption="Картинка 1">
+                      <img class="img-thumbnail img-fluid" style="object-fit: cover" src="{{ photo.img.url }}" />
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="container mb-3" style="margin-top: 80px;">
+            <div class="row">
+                    <div class="col-12 text-center text-md-start">
+                        <h3 class="mb-4 border-bottom pb-3 text-start">Документы</h3>
+                    </div>
+                    {% for doc in docs %}
+                        <div class="d-flex flex-row align-items-center mb-3">
+                            <div class="media-left me-2">
+                                <div class="media-object">
+                                    {% if doc.get_extension == '.pdf' %}
+                                        <i class="fa-regular fa-file-pdf fa-3x" style="width: 50px;"></i>
+                                    {% elif doc.get_extension == '.jpg' %}
+                                        <img src="{{ doc.file.url }}" style="object-fit: cover" width="50" height="60" alt="">
+                                    {% else %}
+                                        <i class="fa fa-file-o fa-3x pull-left" style="width: 50px;" aria-hidden="true"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <h5 class="media-heading">{{ doc.name }}</h5>
+                                <a href="{{ doc.file.url }}" download=""><i class="fa fa-download" aria-hidden="true"></i> Скачать</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+
+            </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script type="application/javascript">
+        Fancybox.bind("[data-fancybox]", {
+          // Your custom options
+        });
+    </script>
+{% endblock %}

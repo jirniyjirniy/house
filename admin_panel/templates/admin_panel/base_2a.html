@@ -1,0 +1,206 @@
+{% extends 'admin_panel/base.html' %}
+{%  load static %}
+{# Load the tag library#}
+{% load django_bootstrap5 %}
+{# Load CSS and JavaScript#}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts#}
+{% bootstrap_messages %}
+{# Read the documentation for more information#}
+{% block title %}
+    {% block title_2a %}
+    {% endblock %}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'admin_panel/adminlte/plugins/select2/css/select2.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    {% block head_2a %}
+
+    {% endblock %}
+{% endblock %}
+{% block content %}
+
+    <div class="content-wrapper"  style="height: auto">
+    <!-- Content Header (Page header) -->
+    <section class="content-header pb-0">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h4 class="mb-0">{% block name %} {% endblock %}</h4>
+          </div>
+
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                {% if user_permission.statistics %}
+                    <li class="breadcrumb-item"><a href="{% url 'statistic' %}">Главная</a></li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{% url 'update_personal' request.user.id %}">Главная</a></li>
+                {% endif %} 
+                {% block navigation %}
+                {% endblock %}
+            </ol>
+          </div>
+        </div>
+        <hr style="border-top: 1px solid darkgrey;">
+        <div class="row mb-3">
+          <div class="col-lg-4 col-sm-6 col-12">
+            <!-- small box -->
+            <div class="info-box small-box bg-success">
+              <div class="info-box-content inner p-0">
+                <h3 class="info-box-text">{{ paybox_balance }}</h3>
+                <p>Состояние кассы</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-dollar-sign"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-sm-6 col-12">
+            <!-- small box -->
+            <div class="info-box small-box bg-info">
+              <div class="info-box-content inner p-0">
+                <h3 class="info-box-text">{{ personal_accounts_balance }}</h3>
+                <p>Баланс по счетам</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-dollar-sign"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-sm-6 col-12">
+            <!-- small box -->
+            <div class="info-box small-box bg-danger">
+              <div class="info-box-content inner p-0">
+                <h3 class="info-box-text">{{ personal_accounts_debts }}</h3>
+                <p>Задолженности по счетам</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-dollar-sign"></i>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown text-right">
+              <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Выберите действие
+              </button>
+              <ul class="dropdown-menu">
+                {% block action_list %}
+
+                {% endblock %}
+              </ul>
+          </div>
+
+          <!-- ./col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Default box -->
+       <div class="card card-success card-outline">
+          <div class="card-header text-right p-2 pe-3">
+            <button type="button" class="btn btn-default clear_button">Очистить</button>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body p-0">
+              <div class="table-responsive" >
+                  {% block card_body %}
+                  {% endblock %}
+              </div>
+          </div>
+          <!-- /.card-body -->
+          <div class="card-footer d-flex flex-column bg-white">
+              {% block card_footer %}
+              {% endblock %}
+          </div>
+       </div>
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'admin_panel/adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script type="application/javascript">
+       //Initialize Select2 Elements
+        $('.select2').select2({
+              placeholder: '',
+        })
+        $('.select2-simple').select2({
+              placeholder: '',
+              minimumResultsForSearch: -1
+
+        })
+
+       $(function() {
+          $('input[name="daterange"]').daterangepicker({
+            opens: 'center',
+            autoUpdateInput: false,
+            applyButtonClasses: "btn-success",
+
+            "locale": {
+                "format": "DD/MM/YYYY",
+                "separator": " - ",
+                "applyLabel": "Применить",
+                "cancelLabel": "Отменить",
+                "fromLabel": "С",
+                "toLabel": "По",
+                "customRangeLabel": "Custom",
+                "weekLabel": "Нд",
+                "daysOfWeek": [
+                    "Вс",
+                    "Пн",
+                    "Вт",
+                    "Ср",
+                    "Чт",
+                    "Пт",
+                    "Сб"
+                ],
+                "monthNames": [
+                    "Январь",
+                    "Февраль",
+                    "Март",
+                    "Апрель",
+                    "Май",
+                    "Июнь",
+                    "Июль",
+                    "Август",
+                    "Сентябрь",
+                    "Октябрь",
+                    "Ноябрь",
+                    "Декабрь"
+                ],
+                "firstDay": 1
+          },},);
+          $('.daterange').on('apply.daterangepicker', function(ev, picker) {
+              $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+          });
+          $('.daterange').on('cancel.daterangepicker', function(ev, picker) {
+              $(this).val('');
+          });
+        });
+        $('.clear_button').on('click',function () {
+            $('input').each(function () {
+                $(this).val('')
+            })
+            $(".select2-simple").val('').trigger('change')
+            $(".select2-simple-section").val('').trigger('change')
+            $(".select2-simple-floor").val('').trigger('change')
+            $(".select2").val('').trigger('change')
+
+             $("#filter").trigger('submit')
+
+        })
+
+
+    </script>
+    {% block  script_2a %}
+    {% endblock %}
+{% endblock %}

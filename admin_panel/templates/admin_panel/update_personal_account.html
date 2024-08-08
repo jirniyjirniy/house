@@ -1,0 +1,91 @@
+{% extends 'admin_panel/base.html' %}
+{%  load static %}
+{# Load the tag library#}
+{% load django_bootstrap5 %}
+{# Load CSS and JavaScript#}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts#}
+{% bootstrap_messages %}
+{# Read the documentation for more information#}
+{% block title %}
+    Лицевой счёт
+{% endblock %}
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="content-wrapper" style="height: auto">
+    <!-- Content Header (Page header) -->
+    <section class="content-header pb-0">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h4 class="mb-0">Лицевой счёт</h4>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                {% if user_permission.statistics %}
+                    <li class="breadcrumb-item"><a href="{% url 'statistic' %}">Главная</a></li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{% url 'update_personal' request.user.id %}">Главная</a></li>
+                {% endif %}
+                <li class="breadcrumb-item"><a href="{% url 'personal_accounts' %}">Лицевые счета</a></li>
+                <li class="breadcrumb-item">Лицевой счёт</li>
+                <li class="breadcrumb-item">Редактирование</li>
+            </ol>
+          </div>
+        </div>
+        <hr style="border-top: 1px solid darkgrey;">
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Default box -->
+           <div class="row ps-2">
+                <div class="col-12">
+                        <div class="form-group ">
+                            <div class="input-group">
+                                <div class="input-group-addon d-flex align-items-center  ps-3 pe-3 pt-2 pb-2 bg-white" style="height: 38px;border: 1px solid #ced4da">
+                                    №
+                                </div>
+                                <div class="">
+                                    {% bootstrap_field form.number %}
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+          <!-- Default box -->
+           <div class="card card-primary card-outline card-success ps-3">
+                <div class="card-header p-0 border-bottom-0">
+                </div>
+                <div class="card-body p-2">
+                        {% csrf_token %}
+                        {% bootstrap_field form.status %}
+                        {% bootstrap_field form.house %}
+                        {% bootstrap_field form.section %}
+                        {% bootstrap_field form.flat %}
+                        <p><b>Владелец:</b> <span id="user-fullname">не выбран</span></p>
+                        <p><b>Телефон:</b> <span id="user-phone">не выбран</span></p>
+                        <div class="col-12 text-right">
+                            {% bootstrap_button "Отменить" button_type="reset" button_class="btn-default" %}
+                            {% bootstrap_button "Сохранить" button_type="submit" button_class="btn-success" %}
+                        </div>
+                </div>
+
+            </div>
+        </form>
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock %}
+
+{% block  script %}
+     <script type="module" src="{% static 'admin_panel/personal_account/update_personal_account.js' %}"></script>
+{% endblock %}

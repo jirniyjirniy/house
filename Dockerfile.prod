@@ -1,0 +1,75 @@
+###########
+# BUILDER #
+###########
+
+# pull official base image
+FROM python:3.10-alpine as builder
+
+# set work directory
+WORKDIR /usr/src/House24
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install psycopg2 dependencies
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev
+
+# lint
+RUN pip install --upgrade pip
+# install dependencies
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/House24/wheels -r requirements.txt
+
+
+#########
+# FINAL #
+#########
+
+# pull official base image
+FROM python:3.10-alpine
+
+# create directory for the app user
+RUN mkdir -p /home/House24
+
+# create the app user
+RUN addgroup -S House24 && adduser -S House24 -G House24
+
+# create the appropriate directories
+ENV HOME=/home/House24
+ENV APP_HOME=/home/House24/web
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/static
+RUN mkdir $APP_HOME/media
+
+
+WORKDIR $APP_HOME
+
+# install dependencies
+RUN apk update && apk add libpq
+
+RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto terminus-font \
+   && fc-cache -f \
+   && fc-list | sort
+
+RUN apk add py3-pip py3-pillow py3-cffi py3-brotli gcc musl-dev python3-dev pango
+
+COPY --from=builder /usr/src/House24/wheels /wheels
+COPY --from=builder /usr/src/House24/requirements.txt .
+RUN pip install --no-cache /wheels/*
+
+# copy entrypoint-prod.sh
+COPY ./entrypoint.sh $APP_HOME
+
+# copy project
+COPY . $APP_HOME
+
+# chown all the files to the app user
+RUN chown -R House24:House24 $APP_HOME
+
+# change to the app user
+USER House24
+
+# run entrypoint.sh
+ENTRYPOINT ["/home/House24/web/entrypoint.sh"]

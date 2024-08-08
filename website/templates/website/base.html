@@ -1,0 +1,72 @@
+{%  load static %}
+{# Load the tag library #}
+{% load django_bootstrap5 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{# Read the documentation for more information #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/svg"   href="{% static 'admin_panel/imgs/logo.svg' %}">
+    <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    {% block head %}
+    {% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top p-0" style="background: #f8f8f8">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'main' %}">
+            <img src="{% static 'admin_panel/imgs/logo.svg' %}"  alt="House24" width="145" height="40">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item"  style="padding-right: 15px;">
+              <a class="nav-link" href="{% url 'main' %}">Главная</a>
+            </li>
+            <li class="nav-item" style="padding-right: 15px;">
+              <a class="nav-link" href="{% url 'about_us_site' %}">О нас</a>
+            </li>
+            <li class="nav-item" style="padding-right: 15px;">
+              <a class="nav-link" href="{% url 'site_services' %}">Услуги</a>
+            </li>
+            <li class="nav-item" style="padding-right: 15px;">
+              <a class="nav-link" href="https://avada-media.ua/">Условия приобретения</a>
+            </li>
+            <li class="nav-item" style="padding-right: 15px;">
+              <a class="nav-link" href="{% url 'contacts_site' %}">Контакты</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i> Вход</a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main class="mb-auto flex-grow-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="footer p-3" style="background: #f8f8f8">
+        <div class="container">
+            <div class="row">
+                <div class="text-center">
+                    <p class="text-muted mb-0">Разработано <a href="https://avada-media.ua/">AVADA-MEDIA</a>. На базе системы управления <a href="https://avada-media.ua/moydom24/">"МойДом24"</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/cce590ac92.js" crossorigin="anonymous"></script>
+      {% block script %}
+      {% endblock %}
+</body>
+</html>

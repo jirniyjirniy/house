@@ -1,0 +1,134 @@
+{% extends 'admin_panel/base.html' %}
+{%  load static %}
+{# Load the tag library#}
+{% load django_bootstrap5 %}
+{# Load CSS and JavaScript#}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts#}
+{% bootstrap_messages %}
+{# Read the documentation for more information#}
+{% block title %}
+    Статьи приходов и расходов
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'admin_panel/adminlte/plugins/select2/css/select2.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+{% endblock %}
+{% block content %}
+    <div class="content-wrapper" style="height: auto">
+    <!-- Content Header (Page header) -->
+    <section class="content-header pb-0">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h4 class="mb-0">Статьи приходов и расходов</h4>
+          </div>
+
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                {% if user_permission.statistics %}
+                    <li class="breadcrumb-item"><a href="{% url 'statistic' %}">Главная</a></li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{% url 'update_personal' request.user.id %}">Главная</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active">Статьи приходов и расходов</li>
+
+            </ol>
+          </div>
+        </div>
+        <hr style="border-top: 1px solid darkgrey;">
+        <div class="row mb-3">
+          <div class="dropdown text-right">
+              <a class="btn btn-success" href="{% url 'add_payment_article' %}">Добавить статью</a>
+          </div>
+          <!-- ./col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Default box -->
+       <div class="card card-success card-outline">
+          <!-- /.card-header -->
+          <div class="card-body p-0">
+              <div class="table-responsive" >
+                   <table id="payment_articles" class="table table-bordered  table-hover table-striped linkedRow border-0 w-100">
+                      <thead>
+                        <tr>
+                          <th>Название</th>
+                          <th>Приход/расход</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for row in rows %}
+                            <tr class="border-0">
+                              <td style="cursor: pointer" data-href="{% url 'update_payment_article' row.id %}">{{ row.title }}</td>
+                              {% if row.debit_credit == 'plus' %}
+                                  <td style="cursor: pointer" data-href="{% url 'update_payment_article' row.id %}"class="text-success">Приход</td>
+                              {% else %}
+                                  <td style="cursor: pointer" data-href="{% url 'update_payment_article' row.id %}" class="text-danger">Расход</td>
+                              {% endif %}
+                              <td class="ps-1 pe-1 text-center" style="width: 100px">
+                                  <div class="btn-group">
+                                      <form action="{% url 'delete_payment_article' row.id %}" method="post">
+                                          {% csrf_token %}
+                                          <a class="btn btn-default" href="{% url 'update_payment_article' row.id %}" role="button"><i class="fa-solid fa-pencil"></i></a>
+                                          <button class="btn btn-default delete-confirmation" type="submit" role="button"><i class="fa-solid fa-trash-can"></i></button>
+                                      </form>
+                                  </div>
+                              </td>
+                            </tr>
+                      {% endfor %}
+
+
+                      </tbody>
+                   </table>
+              </div>
+          </div>
+          <!-- /.card-body -->
+          <div class="card-footer d-flex flex-column bg-white">
+          </div>
+       </div>
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock %}
+{% block script %}
+    <script src="{% static 'admin_panel/adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script type="application/javascript">
+       $(document).ready(function () {
+             $('#payment_articles').DataTable({
+                 searching: false,
+                 ordering:  false,
+                paging: false,
+                select: true,
+                "bInfo" : false
+            });
+        });
+       $("form").on('submit', function() {
+            if(confirm('Вы уверены, что хотите удалить этот элемент?')) {
+                return true;
+            }
+            return false;
+        });
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const rows = document.querySelectorAll("td[data-href]");
+            rows.forEach(row => {
+                row.addEventListener("click", () => {
+                    window.location.href = row.dataset.href;
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+

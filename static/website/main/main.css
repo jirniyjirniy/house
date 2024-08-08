@@ -1,0 +1,26 @@
+.carousel__img {
+  height: 450px;
+}
+
+.carousel__caption {
+  margin-top: 175px;
+}
+
+@media screen and (min-width: 992px) {
+  .carousel__img {
+    height: 600px;
+  }
+  .carousel__caption {
+    margin-top: 250px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .carousel__img {
+    height: 800px;
+  }
+  .carousel__caption {
+    margin-top: 350px;
+  }
+}
+
+/*# sourceMappingURL=main.css.map */

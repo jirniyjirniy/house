@@ -1,0 +1,21 @@
+.drop1
+    display: flex
+    flex-grow: 1
+    justify-content: end
+    align-items: start
+.drop2
+    display: flex
+    flex-grow: 1
+    justify-content: end
+    align-items: start
+@media screen and (min-width: 575px)
+  .drop1
+    display: none
+  .drop2
+    display: flex
+
+@media screen and (max-width: 575px)
+  .drop1
+    display: flex
+  .drop2
+    display: none

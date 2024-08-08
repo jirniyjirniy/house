@@ -1,0 +1,98 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+
+{% block title %}
+    Сайт управляющей компании ЖКХ - "HOUSE 24"
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'website/main/main.css' %}">
+{% endblock %}
+{% block content %}
+    <div id="carouselExampleCaptions" class="carousel slide mb-5">
+      <div class="carousel-indicators">
+        {% for photo in photos %}
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %} class="active" aria-current="true" {% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
+      </div>
+
+      <div class="carousel-inner">
+          {% for photo in photos %}
+            <div class="carousel-item {% if forloop.first %} active {% endif %}">
+              <img src="{{photo.img.url}}" class="carousel__img" style="object-fit: cover; width: 100%" alt="...">
+              <div class="carousel-caption h-100">
+                  <div class="p-3 carousel__caption d-inline-block"  style="background: rgba(0, 0, 0, 0.8);border-radius: 12px;">
+                    <h5 style="font-size:5vw;">Картинка номер {{ forloop.counter }}</h5>
+                  </div>
+              </div>
+            </div>
+          {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h4 class="border-bottom pb-4 mb-4">
+                    {{ main.title }}
+                </h4>
+                <div class="box">
+                    <p>
+                        {{ main.description|safe|escape  }}
+                    </p>
+                    <div class="row">
+                        <div class="col-4">
+                            <a href="{% url 'about_us' %}" class="btn btn-primary mb-5">Подробнее</a>
+                        </div>
+                        <div class="col-8">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5 col-md-4">
+                <h4 class="border-bottom pb-4 mb-4">Контакты</h4>
+                <div class="box">
+                    <p><i class="fas fa-user-circle me-2"></i> {{ contacts.full_name }}</p>
+                    <p><i class="fas fa-compass me-2"></i> {{ contacts.location }}</p>
+                    <p><i class="fas fa-map-marker me-2"></i>{{ contacts.address }}</p>
+                    <p><i class="fas fa-phone me-2"></i> <a href="tel:{{ contacts.phone }}">{{ contacts.phone }}</a></p>
+                    <p><i class="fas fa-envelope me-2"></i> <a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="border-bottom pb-4 mb-4">Рядом с нами</h4>
+            </div>
+            {% for info_photo in info_photos %}
+                <div class="col-12 col-md-6 col-lg-4  d-flex flex-column  advantage-item mb-4">
+                        <div class="img-thumbnail flex-grow-1">
+                            <img src="{{ info_photo.img.url }}" class="img-fluid mb-4" alt="">
+                            <div class="caption p-2">
+                                <h3 class="mb-2">{{ info_photo.title }}</h3>
+                                <p class="">
+                                    {{ info_photo.description|safe|escape  }}
+                                </p>
+                            </div>
+                        </div>
+                </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+
+{% endblock %}

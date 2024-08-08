@@ -1,0 +1,12 @@
+.singledatepicker {
+  border-radius: 0px;
+  border: 1px #dee2e6 solid;
+  height: 38px;
+  cursor: pointer;
+}
+
+#client_filter {
+  display: none;
+}
+
+/*# sourceMappingURL=client.css.map */

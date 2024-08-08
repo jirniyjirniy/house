@@ -1,0 +1,40 @@
+{% extends 'website/base.html' %}
+{%  load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+
+{% block title %}
+    Контакты
+{% endblock %}
+{% block content %}
+        <div class="mb-5">
+            {{ contacts.coordinate|safe|escape }}
+        </div>
+        <div class="container mb-5">
+        <div class="row">
+          <div class="col-sm-7 col-md-8">
+                <h4 class="border-bottom pb-4 mb-4">
+                    {{ contacts.title }}
+                </h4>
+                <div class="box">
+                    <p>
+                        {{ contacts.description|safe|escape  }}
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-5 col-md-4">
+                <h4 class="border-bottom pb-4 mb-4">Контакты</h4>
+                <div class="box">
+                    <p><i class="fas fa-user-circle me-2"></i> {{ contacts.full_name }}</p>
+                    <p><i class="fas fa-compass me-2"></i> {{ contacts.location }}</p>
+                    <p><i class="fas fa-map-marker me-2"></i>{{ contacts.address }}</p>
+                    <p><i class="fas fa-phone me-2"></i> <a href="tel:{{ contacts.phone }}">{{ contacts.phone }}</a></p>
+                    <p><i class="fas fa-envelope me-2"></i> <a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

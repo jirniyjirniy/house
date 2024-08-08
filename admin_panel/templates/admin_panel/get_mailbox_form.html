@@ -1,0 +1,102 @@
+{% extends 'admin_panel/base.html' %}
+{%  load static %}
+{# Load the tag library#}
+{% load django_bootstrap5 %}
+{# Load CSS and JavaScript#}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts#}
+{% bootstrap_messages %}
+{# Read the documentation for more information#}
+{% block title %}
+    Новое сообщение
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'admin_panel/mailbox/mailbox.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="content-wrapper" style="height: auto">
+    <!-- Content Header (Page header) -->
+    <section class="content-header pb-0">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h4 class="mb-0">Новое сообщение</h4>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                {% if user_permission.statistics %}
+                    <li class="breadcrumb-item"><a href="{% url 'statistic' %}">Главная</a></li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{% url 'update_personal' request.user.id %}">Главная</a></li>
+                {% endif %}
+                <li class="breadcrumb-item"><a href="{% url 'mailboxes' %}">Сообщения</a></li>
+                <li class="breadcrumb-item">Новое сообщение</li>
+            </ol>
+          </div>
+        </div>
+        <hr style="border-top: 1px solid darkgrey;">
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Default box -->
+       <div class="card card-primary card-outline card-success ps-3">
+            <div class="card-header p-0 border-bottom-0">
+                <h3 class="box-title p-2"></h3>
+            </div>
+           <hr style="border-top: 1px solid darkgrey;">
+            <div class="card-body p-2" >
+                <form method="post" id="mailbox-form" action="{% url 'add_mailbox' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_field form.title %}
+                    {% bootstrap_field form.description %}
+                    <div class="mb-4 mt-4">
+                        <h4>Кому отправить:</h4>
+                        {% bootstrap_field form.to_debtors %}
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            {% bootstrap_field form.house %}
+                            {% bootstrap_field form.section %}
+                            {% bootstrap_field form.floor %}
+                            {% bootstrap_field form.flat %}
+                        </div>
+                    </div>
+
+                    <div class="col-12 text-right">
+                        {% bootstrap_button "Отменить" button_type="reset" button_class="btn-default" %}
+                        {% bootstrap_button "Сохранить" button_type="submit" button_class="btn-success" %}
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+    <!-- /.content -->
+  </div>
+{% endblock %}
+{% block  script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $("#mailbox-form").validate({
+            errorClass: "error fail-alert",
+            validClass: "valid success-alert",
+            ignore : '.ignore',
+            rules : {
+                'title':{
+                    required : true
+                }
+            },
+            messages : {
+                'title':{
+                    required : "Обязательно укажите заголовок"
+                },
+
+            }
+
+        });
+    </script>
+    <script type="module" src="{% static 'admin_panel/mailbox/mailbox.js' %}"></script>
+{% endblock %}
